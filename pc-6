@@ -4,7 +4,7 @@ import pandas as pd
 btc = yf.Ticker("BTC-USD")
 сrypta = btc.history(start="2024-01-01", end="2025-01-01")
 сrypta = сrypta[['Close']].copy()
-print(сrypta.head())
+print(сrypta.head(10))
 
 сrypta['SMA1'] = сrypta['Close'].rolling(window=1).mean()
 сrypta['SMA7'] = сrypta['Close'].rolling(window=7).mean()
