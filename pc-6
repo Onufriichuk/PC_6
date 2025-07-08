@@ -1,0 +1,36 @@
+import yfinance as yf
+import pandas as pd
+
+btc = yf.Ticker("BTC-USD")
+сrypta = btc.history(start="2024-01-01", end="2025-01-01")
+сrypta = сrypta[['Close']].copy()
+print(сrypta.head())
+
+сrypta['SMA1'] = сrypta['Close'].rolling(window=1).mean()
+сrypta['SMA7'] = сrypta['Close'].rolling(window=7).mean()
+
+сrypta['Signal'] = "Just don't do anything"
+сrypta.loc[сrypta['SMA1'] > сrypta['SMA7'], 'Signal'] = "BUY PLZ!!"
+сrypta.loc[сrypta['SMA1'] < сrypta['SMA7'], 'Signal'] = "SELLLLL!!!"
+print(сrypta[['Signal', 'SMA1', 'SMA7', 'Close']].tail(10))
+print(сrypta.tail(10))
+initial_balance = 666
+balance = initial_balance
+stocks = 0
+
+
+for i in range(len(сrypta)):
+    if сrypta['Signal'].iloc[i] == "BUY PLZ!!" and balance > 0:
+        stocks = balance / сrypta['Close'].iloc[i]
+        balance = 0
+
+    elif сrypta['Signal'].iloc[i] == "SELLLLL!!!" and stocks > 0:
+        balance = stocks * сrypta['Close'].iloc[i]
+        stocks = 0
+
+if stocks > 0:
+    balance = stocks * сrypta['Close'].iloc[-1]
+    stocks = 0
+
+profit = balance - initial_balance
+print("Ми отримали:", round(profit, 2))
